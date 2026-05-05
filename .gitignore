@@ -1,6 +1,6 @@
 .git/
 .ipynb_checkpoints
-.env
+phitronenv/
 .vscode/
 __pycache__/
 *.mp3

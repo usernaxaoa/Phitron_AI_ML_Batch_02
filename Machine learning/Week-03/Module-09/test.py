@@ -5,11 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # %%
-X = np.array([1,3,4,6,7]) # years of exp
-Y = np.array([15,35,45,65,75]) # salary
+X = np.array([1, 3, 4, 6, 7])  # years of exp
+Y = np.array([15, 35, 45, 65, 75])  # salary
 
 sns.scatterplot(x=X, y=Y)
 plt.show()
+
+
 # %%
 def make_prediction(X, Y, w, b):
     """
@@ -22,6 +24,8 @@ def make_prediction(X, Y, w, b):
     for i in range(m):
         pred_list[i] = w * X[i] + b
     return pred_list
+
+
 # %%
 prediction = make_prediction(X, Y, 10, 5)
 print(prediction)

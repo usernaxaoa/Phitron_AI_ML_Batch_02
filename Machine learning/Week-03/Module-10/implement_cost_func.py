@@ -41,6 +41,7 @@ def compute_cost(X, Y, w, b):
     cost = cost / m
     return cost
 
+
 w = 0.0
 b = 0.0
 

@@ -81,3 +81,6 @@ for i in range(-100, 100):
 plt.plot(w, cost_history)
 plt.grid(visible=True)
 plt.show()
+
+# %%
+# idea of gradient descent

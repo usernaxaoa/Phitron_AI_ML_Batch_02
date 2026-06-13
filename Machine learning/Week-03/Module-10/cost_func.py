@@ -7,8 +7,8 @@ import seaborn as sns
 sns.set_theme()
 
 # %%
-x = np.array([1, 3, 4, 6, 7])  # years of experience
-y = np.array([15, 35, 45, 65, 75])  # salary
+x = np.array([1, 3, 4, 6, 7, 8, 9, 11])  # years of experience
+y = np.array([15, 35, 45, 65, 75, 20, 45, 56])  # salary
 
 sns.scatterplot(x=x, y=y)
 plt.xlabel("years of experience")
@@ -22,7 +22,7 @@ plt.show()
 
 
 # prediction function
-def make_prediction(x, y, w, b):
+def make_prediction(x, w, b):
     m = x.shape[0]
     prediction_list = np.zeros((m,))
     for i in range(m):
@@ -95,3 +95,42 @@ def calculate_gradient(x, y, w, b):
     for i in range(n):
         prediction = w * x[i] + b
         error = prediction - y[i]
+        dj_dw = dj_dw + error * x[i]
+        dj_db = dj_db + error
+
+    dj_dw = dj_dw / n
+    dj_db = dj_db / n
+
+    return dj_dw, dj_db
+
+
+# %%
+# gradient descent calculation
+def gradient_descent(x, y, w_input, b_input, max_iteration, alpha=0.01):
+    w = w_input
+    b = b_input
+    cost_memo = []
+
+    for i in range(max_iteration):
+        dj_dw, dj_db = calculate_gradient(x, y, w, b)
+
+        # update
+        w = w - alpha * dj_dw
+        b = b - alpha * dj_db
+        cost = cost_calculation(x, y, w, b)
+        cost_memo.append(cost)
+
+        # if i % 100 == 0:
+        #     print(
+        #         f"w: {w:.4f}, b: {b:.4f}, dj_dw: {dj_dw:.4f}, dj_db: {dj_db:.4f}, cost: {cost:.4f}"
+        #     )
+    return w, b
+
+
+# %%
+w, b = gradient_descent(x, y, 10, 0, max_iteration=7000, alpha=0.01)
+print(f"w:{w:.2f}, b:{b:.2f}")
+
+sns.scatterplot(x=x, y=y)
+plt.plot(w, b)
+plt.show()

@@ -134,3 +134,5 @@ print(f"w:{w:.2f}, b:{b:.2f}")
 sns.scatterplot(x=x, y=y)
 plt.plot(w, b)
 plt.show()
+
+# %%

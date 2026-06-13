@@ -55,7 +55,7 @@ def cost_calculation(x, y, w, b):
         se = pow(y[i] - y_cap, 2)
         cost += se
 
-    cost /= n
+    cost /= 2 * n
     return cost
 
 
@@ -84,3 +84,14 @@ plt.show()
 
 # %%
 # idea of gradient descent
+# calculate gradient
+
+
+def calculate_gradient(x, y, w, b):
+    n = x.shape[0]
+    dj_dw = 0.0
+    dj_db = 0.0
+
+    for i in range(n):
+        prediction = w * x[i] + b
+        error = prediction - y[i]

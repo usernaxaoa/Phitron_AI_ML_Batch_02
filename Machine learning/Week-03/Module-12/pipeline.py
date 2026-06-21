@@ -127,6 +127,17 @@ lr_pipe.predict(xtest)
 
 
 # %%
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import root_mean_squared_error
 
+
+# %%
+ypred = lr_pipe.predict(xtest)
+print('mse: ', round(mean_squared_error(ytest,ypred), 4))
+print('r2score: ', round(r2_score(ytest,ypred), 4))
+print('rmse: ', round(root_mean_squared_error(ytest,ypred), 4))
+print('mae: ', round(mean_absolute_error(ytest,ypred), 4))
 
 # %%

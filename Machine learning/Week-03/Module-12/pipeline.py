@@ -22,7 +22,7 @@ from sklearn.pipeline import Pipeline
 
 # %%
 
-df = pd.read_csv('/home/nafiz/Downloads/bangladesh_student_performance_updated.csv')
+df = pd.read_csv("/home/nafiz/Downloads/bangladesh_student_performance_updated.csv")
 
 # %%
 df.describe()
@@ -32,55 +32,57 @@ df.info()
 # %%
 df.isnull().sum()
 # %%
-df['Pstatus'].unique()
+df["Pstatus"].unique()
 # %%
 df.columns
 # %%
 df.duplicated()
 # %%
-df.hist(bins=15, figsize=(10,6))
-plt.suptitle('distribution of numerical features')
+df.hist(bins=15, figsize=(10, 6))
+plt.suptitle("distribution of numerical features")
 # %%
-num_col = ['age', 'tuition_fee', 'ssc_result', 'hsc_result']
+num_col = ["age", "tuition_fee", "ssc_result", "hsc_result"]
 df[num_col].corr()
 
 # %%
 df.sample(10)
 # %%
 plt.figure(figsize=(10, 6))
-sns.heatmap(
-    df[num_col].corr(),
-    annot=True,
-    cmap='coolwarm'
-)
-plt.title('correlation with heatmap')
+sns.heatmap(df[num_col].corr(), annot=True, cmap="coolwarm")
+plt.title("correlation with heatmap")
 plt.show()
 # %%
-sns.boxplot(data=df, x=df['tuition_fee'])
+sns.boxplot(data=df, x=df["tuition_fee"])
 # %%
 df.sample(10)
 # %%
-nominal_cat = ['gender', 'address', 'famsize', 'Pstatus', 'relationship', 'smoker', 'F_Job','M_Job' ]
+nominal_cat = [
+    "gender",
+    "address",
+    "famsize",
+    "Pstatus",
+    "relationship",
+    "smoker",
+    "F_Job",
+    "M_Job",
+]
 # ordinal_cat = ['M_Edu', 'F_Edu', 'time_friends']
 # m_edu = ['0', '1', '2', '3', '4']
 # f_edu = ['0', '1', '2', '3', '4']
 # time_order = ['5', '4', '3', '2', '1']
-numerical_col = ['age', 'tuition_fee', 'ssc_result']
+numerical_col = ["age", "tuition_fee", "ssc_result"]
 
 
 # %%
 numerical_transformer_pipe = Pipeline(
-    steps=[
-        ('imputer', SimpleImputer(strategy='mean')),
-        ('scaler', StandardScaler())
-    ]
+    steps=[("imputer", SimpleImputer(strategy="mean")), ("scaler", StandardScaler())]
 )
 numerical_transformer_pipe
 # %%
 nominal_transform_pipe = Pipeline(
     steps=[
-        ('imputer', SimpleImputer(strategy='most_frequent')),
-        ('encoding',OneHotEncoder(sparse_output=False, handle_unknown='ignore') )
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("encoding", OneHotEncoder(sparse_output=False, handle_unknown="ignore")),
     ]
 )
 
@@ -97,37 +99,27 @@ nominal_transform_pipe
 # ordinal_transform_pipe
 # %%
 
-x = df.drop(['date', 'hsc_result'], axis=1)
-y = df['hsc_result']
+x = df.drop(["date", "hsc_result"], axis=1)
+y = df["hsc_result"]
 xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=42)
 
 
 # %%
-preprocesor = ColumnTransformer (
+preprocesor = ColumnTransformer(
     transformers=[
-        ('numerical', numerical_transformer_pipe, numerical_col),
-        ('nominal', nominal_transform_pipe, nominal_cat)
+        ("numerical", numerical_transformer_pipe, numerical_col),
+        ("nominal", nominal_transform_pipe, nominal_cat),
         # ('ordinal', ordinal_transform_pipe, ordinal_cat)
     ],
-    remainder='passthrough'
+    remainder="passthrough",
 )
 # preprocesor
 # %%
-lr_pipe = Pipeline(
-    steps=[
-        ('preprocessor', preprocesor),
-        ('model', LinearRegression())
-    ]
-)
+lr_pipe = Pipeline(steps=[("preprocessor", preprocesor), ("model", LinearRegression())])
 lr_pipe.fit(xtrain, ytrain)
 
 # %%
-sgd_pipe = Pipeline (
-    steps=[
-        ('preprocesor', preprocesor),
-        ('model', SGDRegressor())
-    ]
-)
+sgd_pipe = Pipeline(steps=[("preprocesor", preprocesor), ("model", SGDRegressor())])
 sgd_pipe.fit(xtrain, ytrain)
 
 # %%

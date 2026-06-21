@@ -132,6 +132,9 @@ sgd_pipe.fit(xtrain, ytrain)
 
 # %%
 lr_pipe.predict(xtest)
+
+
 # %%
-xtest
+
+
 # %%

@@ -9,7 +9,10 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, SGDRegressor
 
+from sklearn.compose import ColumnTransformer
 
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
@@ -40,6 +43,9 @@ plt.suptitle('distribution of numerical features')
 # %%
 num_col = ['age', 'tuition_fee', 'ssc_result', 'hsc_result']
 df[num_col].corr()
+
+# %%
+df.sample(10)
 # %%
 plt.figure(figsize=(10, 6))
 sns.heatmap(
@@ -54,14 +60,11 @@ sns.boxplot(data=df, x=df['tuition_fee'])
 # %%
 df.sample(10)
 # %%
-nominal_cat = ['gender', 'address', 'famsize', 'Pstatus', 'relationship', 'smoker', 'F_Job','time_friends' ]
-ordinal_cat = ['M_Edu', 'F_Edu', 'M_Job']
-
+nominal_cat = ['gender', 'address', 'famsize', 'Pstatus', 'relationship', 'smoker', 'F_Job','M_Job' ]
+ordinal_cat = ['M_Edu', 'F_Edu', 'time_friends']
 m_edu = ['0', '1', '2', '3', '4']
 f_edu = ['0', '1', '2', '3', '4']
-
 time_order = ['5', '4', '3', '2', '1']
-
 numerical_col = ['age', 'tuition_fee', 'ssc_result']
 
 
@@ -93,3 +96,27 @@ ordinal_transform_pipe = Pipeline(
 
 ordinal_transform_pipe
 # %%
+
+x = df.drop(['date', 'hsc_result'], axis=1)
+y = df['hsc_result']
+xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=42)
+# %%
+xtrain
+# %%
+ytrain
+
+# %%
+preprocesor = ColumnTransformer (
+    transformers=[
+        ('numerical', numerical_transformer_pipe, numerical_col),
+        ('nominal', nominal_transform_pipe, nominal_cat),
+        ('ordinal', ordinal_transform_pipe, ordinal_cat)
+    ]
+)
+# %%
+lr_pipe = Pipeline(
+    steps=[
+        ('preprocessor', preprocesor),
+        ('model', LinearRegression)
+    ]
+)

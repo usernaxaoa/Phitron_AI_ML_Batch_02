@@ -61,10 +61,10 @@ sns.boxplot(data=df, x=df['tuition_fee'])
 df.sample(10)
 # %%
 nominal_cat = ['gender', 'address', 'famsize', 'Pstatus', 'relationship', 'smoker', 'F_Job','M_Job' ]
-ordinal_cat = ['M_Edu', 'F_Edu', 'time_friends']
-m_edu = ['0', '1', '2', '3', '4']
-f_edu = ['0', '1', '2', '3', '4']
-time_order = ['5', '4', '3', '2', '1']
+# ordinal_cat = ['M_Edu', 'F_Edu', 'time_friends']
+# m_edu = ['0', '1', '2', '3', '4']
+# f_edu = ['0', '1', '2', '3', '4']
+# time_order = ['5', '4', '3', '2', '1']
 numerical_col = ['age', 'tuition_fee', 'ssc_result']
 
 
@@ -86,37 +86,52 @@ nominal_transform_pipe = Pipeline(
 
 nominal_transform_pipe
 
-ordinal_transform_pipe = Pipeline(
-    steps=[
-        ('imputer', SimpleImputer(strategy='most_frequent')),
-        ('encoding',OrdinalEncoder(categories=['M_edu_order, F_edu_order, time_friends_order']) ),
-        ('scaler', MinMaxScaler())
-    ]
-)
+# ordinal_transform_pipe = Pipeline(
+#     steps=[
+#         ('imputer', SimpleImputer(strategy='most_frequent')),
+#         ('encoding',OrdinalEncoder(categories=['M_edu_order, F_edu_order, time_friends_order']) ),
+#         ('scaler', MinMaxScaler())
+#     ]
+# )
 
-ordinal_transform_pipe
+# ordinal_transform_pipe
 # %%
 
 x = df.drop(['date', 'hsc_result'], axis=1)
 y = df['hsc_result']
 xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2, random_state=42)
-# %%
-xtrain
-# %%
-ytrain
+
 
 # %%
 preprocesor = ColumnTransformer (
     transformers=[
         ('numerical', numerical_transformer_pipe, numerical_col),
-        ('nominal', nominal_transform_pipe, nominal_cat),
-        ('ordinal', ordinal_transform_pipe, ordinal_cat)
-    ]
+        ('nominal', nominal_transform_pipe, nominal_cat)
+        # ('ordinal', ordinal_transform_pipe, ordinal_cat)
+    ],
+    remainder='passthrough'
 )
+# preprocesor
 # %%
 lr_pipe = Pipeline(
     steps=[
         ('preprocessor', preprocesor),
-        ('model', LinearRegression)
+        ('model', LinearRegression())
     ]
 )
+lr_pipe.fit(xtrain, ytrain)
+
+# %%
+sgd_pipe = Pipeline (
+    steps=[
+        ('preprocesor', preprocesor),
+        ('model', SGDRegressor())
+    ]
+)
+sgd_pipe.fit(xtrain, ytrain)
+
+# %%
+lr_pipe.predict(xtest)
+# %%
+xtest
+# %%
